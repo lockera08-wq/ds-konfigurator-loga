@@ -1,5 +1,5 @@
 # Nasazení konfigurátoru na GitHub Pages: při každém pushi do větve main se aplikace sestaví a nahraje.
-# V repozitáři je potřeba jednou nastavit: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Pages se zapnou automaticky (configure-pages s enablement: true); ručně: Settings → Pages → Source: "GitHub Actions".
 name: Nasazení na GitHub Pages
 
 on:
@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true # zapne GitHub Pages (zdroj: GitHub Actions) bez ručního nastavení
       - uses: actions/setup-node@v4
         with:
           node-version: 22
