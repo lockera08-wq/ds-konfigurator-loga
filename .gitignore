@@ -1,0 +1,14 @@
+# závislosti a build
+node_modules/
+dist/
+*.log
+.wrangler/
+.claude/
+
+# produktové soubory, výstupy a testovací modely – do veřejného repozitáře nepatří
+produkty/
+vystup/
+test-modely/
+
+# ladicí obrázky
+logo/debug-*.png

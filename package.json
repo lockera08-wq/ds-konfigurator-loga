@@ -1,0 +1,26 @@
+{
+  "name": "konfigurator-loga",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Konfigurátor loga DS – umístění zapuštěného loga na libovolný 3D model (STL) a export pro tisk",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name ds-konfigurator-loga",
+    "logo:vectorize": "node tools/vectorize-logo.mjs",
+    "logo:polygons": "node tools/svg-to-polygons.mjs",
+    "apply": "node tools/apply-logo.mjs"
+  },
+  "dependencies": {
+    "manifold-3d": "^3.5.4",
+    "three": "^0.187.0",
+    "three-mesh-bvh": "^0.9.18"
+  },
+  "devDependencies": {
+    "potrace": "^2.1.8",
+    "sharp": "^0.35.5",
+    "vite": "^8.3.8"
+  }
+}

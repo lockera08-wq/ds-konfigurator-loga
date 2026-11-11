@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Konfigurátor loga DS</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="panel">
+        <header class="panel-head">
+          <img src="/DS-logo.svg" alt="DS" class="brand" />
+          <div>
+            <h1>Konfigurátor loga</h1>
+            <p class="muted">Fáze 6 · více log, historie, ukládání</p>
+          </div>
+        </header>
+
+        <section class="card">
+          <h2>1. Model</h2>
+          <label class="file-btn">
+            <input type="file" id="file-stl" accept=".stl,.3mf" />
+            Nahrát STL / 3MF…
+          </label>
+          <button id="btn-demo" class="secondary">Načíst ukázkový model</button>
+          <p class="muted small">Nebo soubor přetáhni kamkoli do okna.</p>
+          <label class="row hidden" id="part-row"><span>Díl</span><select id="part-select"></select></label>
+          <dl id="model-info" class="info hidden">
+            <dt>Soubor</dt><dd id="info-name">–</dd>
+            <dt>Rozměry</dt><dd id="info-dims">–</dd>
+            <dt>Trojúhelníky</dt><dd id="info-tris">–</dd>
+            <dt>Síť</dt><dd id="csg-model">–</dd>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h2>2. Loga</h2>
+          <p class="muted small" id="place-hint">Klikni na model: logo se připne do místa kliku. Chyť logo myší a táhni po povrchu.</p>
+          <div id="stamp-list" class="chips"></div>
+          <div class="row">
+            <button id="btn-add" class="secondary">+ Přidat logo</button>
+            <button id="btn-zoom-logo" class="secondary hidden">Přiblížit</button>
+            <button id="btn-remove" class="secondary hidden">Odebrat</button>
+          </div>
+          <dl id="stamp-info" class="info hidden">
+            <dt>Střed</dt><dd id="info-point">–</dd>
+            <dt>Šířka loga</dt><dd id="info-logo-w">–</dd>
+            <dt>Dorovnání</dt><dd id="info-ref">–</dd>
+            <dt>Vršek loga</dt><dd id="info-logo-top">–</dd>
+          </dl>
+          <div id="edge-warning" class="warn hidden"></div>
+          <div class="row">
+            <button id="btn-undo" class="secondary" title="Ctrl+Z" disabled>↶ Zpět</button>
+            <button id="btn-redo" class="secondary" title="Ctrl+Y" disabled>↷ Vpřed</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>3. Parametry</h2>
+          <label class="row"><span>Preset</span>
+            <select id="preset-select">
+              <option value="">– vlastní –</option>
+              <option value="hacek">Háček 8 mm</option>
+              <option value="stredni">Střední 20 mm</option>
+              <option value="velke">Velké 40 mm</option>
+            </select>
+          </label>
+          <label class="row"><span>Průměr kruhu</span><input type="range" id="p-diameter" min="4" max="100" step="0.5" value="8" /><output id="o-diameter">8 mm</output></label>
+          <label class="row"><span>Zapuštění</span><input type="range" id="p-recess" min="0" max="5" step="0.1" value="0.4" /><output id="o-recess">0.4 mm</output></label>
+          <label class="row"><span>Reliéf loga</span><input type="range" id="p-relief" min="0" max="5" step="0.1" value="0.4" /><output id="o-relief">0.4 mm</output></label>
+          <label class="row"><span>Velikost loga</span><input type="range" id="p-logoPct" min="20" max="100" step="1" value="75" /><output id="o-logoPct">75 %</output></label>
+          <label class="row"><span>Otočení</span><input type="range" id="p-rotation" min="0" max="360" step="1" value="0" /><output id="o-rotation">0°</output></label>
+          <label class="row"><span>Vysunutí</span><input type="range" id="p-offset" min="-5" max="5" step="0.1" value="0" /><output id="o-offset">0 mm</output></label>
+          <label class="row"><span>Min. tah (tisk)</span><input type="range" id="p-minStroke" min="0" max="1.5" step="0.05" value="0.5" /><output id="o-minStroke">0.5 mm</output></label>
+          <label class="row"><input type="checkbox" id="p-mirror" /> Zrcadlit logo</label>
+          <label class="row"><input type="checkbox" id="p-fill" checked /> Vyplnit drážky pod kruhem (medailon)</label>
+          <div id="print-warning" class="warn hidden"></div>
+        </section>
+
+        <section class="card">
+          <h2>4. Vyřezání</h2>
+          <label class="row"><input type="checkbox" id="chk-auto" checked /> Počítat automaticky</label>
+          <div class="row">
+            <button id="btn-cut" class="secondary">Vyřezat teď</button>
+          </div>
+          <label class="row"><input type="checkbox" id="chk-show-result" checked /> Zobrazit vyřezaný model</label>
+          <dl class="info">
+            <dt>Stav</dt><dd id="csg-status">čeká na model</dd>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h2>5. Export</h2>
+          <div class="row">
+            <button id="btn-export-stl">Stáhnout STL</button>
+            <button id="btn-export-3mf">Stáhnout 3MF</button>
+          </div>
+          <p class="muted small">STL = jedno těleso. 3MF = model a loga jako dvě části (v Bambu Studiu lze logu přiřadit jiný filament). Souřadnice zůstávají jako v originálu.</p>
+          <div class="row">
+            <button id="btn-save" class="secondary">Uložit nastavení</button>
+            <label class="file-btn secondary">
+              <input type="file" id="file-config" accept=".json" />
+              Načíst nastavení
+            </label>
+          </div>
+          <dl class="info">
+            <dt>Stav</dt><dd id="export-status">umísti logo</dd>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h2>Zobrazení</h2>
+          <label class="row"><input type="checkbox" id="chk-grid" checked /> Mřížka (10 mm)</label>
+          <label class="row"><input type="checkbox" id="chk-wire" /> Drátový model</label>
+          <button id="btn-fit" class="secondary">Vycentrovat pohled</button>
+        </section>
+      </aside>
+
+      <main id="viewport">
+        <canvas id="canvas"></canvas>
+        <div id="drop-hint" class="hidden">Pusť STL / 3MF soubor sem</div>
+        <div id="status" class="status">Nahraj STL / 3MF nebo načti ukázkový model.</div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
